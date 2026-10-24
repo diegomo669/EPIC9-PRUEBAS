@@ -1226,8 +1226,8 @@ model MensajeEstado {
 
   @@map("mensaje_estado")
 }
-feat/G5-HU03-T32-persistencia-bd
-model RespuestaEncuesta {
+
+model RespuestaEncuesta {  
   id               String   @id @default(uuid()) @db.Uuid
   idEncuesta       String   @map("id_encuesta") @db.Uuid
   idTitulado       String   @map("id_titulado") @db.Uuid
@@ -1242,10 +1242,11 @@ model RespuestaEncuesta {
 
   @@unique([idEncuesta, idTitulado], name: "uq_respuesta_encuesta_titulado")
   @@map("respuesta_encuesta")
+}
 
-// 
+//
 // Recuperación de contraseña (HU-12)
-// 
+//
 
 model PasswordResetToken {
   id          String    @id @default(dbgenerated("gen_random_uuid()")) @db.Uuid
@@ -1327,5 +1328,4 @@ model ControlReenvioOtp {
   solicitud           Solicitud @relation(fields: [id_solicitud], references: [id], onDelete: Cascade, onUpdate: NoAction)
 
   @@map("control_reenvio_otp")
-  epic9
 }
