@@ -67,7 +67,6 @@ import { GetApplicationMetricsController } from './http/controllers/get-applicat
     TrustedOriginGuard,
     CorrectionTokenGuard,
   ],
-  exports: [REGISTRATION_SECURITY],
-  exports: [CorrectionTokenService, CorrectionTokenGuard, ObservedApplicationService],
+  exports: [REGISTRATION_SECURITY, CorrectionTokenService, CorrectionTokenGuard, ObservedApplicationService],
 })
 export class RegistrationsModule {}
