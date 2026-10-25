@@ -6,7 +6,7 @@ import { activationService, ActivationError, type ActivationStatus } from '../se
 export interface UseActivationOptions {
   applicationId: string;
   email?: string;
-  onSuccess?: (activationToken: string) => void;
+  onSuccess?: (activationToken: string, maskedEmail: string) => void;
 }
 
 export function formatCooldownTime(seconds: number): string {
@@ -65,7 +65,7 @@ export function useActivation({ applicationId, onSuccess }: UseActivationOptions
     try {
       const result = await activationService.verifyOtp(applicationId, fullCode);
       setActivationToken(result.activationToken);
-      onSuccess?.(result.activationToken);
+      onSuccess?.(result.activationToken, status.maskedEmail);
     } catch (cause) {
       setError(cause instanceof Error ? cause.message : 'No se pudo verificar el código');
       if (cause instanceof ActivationError && cause.code === 'ACTIVATION_ATTEMPTS_EXCEEDED') {
