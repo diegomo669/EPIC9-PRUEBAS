@@ -1,4 +1,4 @@
-export type PingResponse = {
+﻿export type PingResponse = {
   status: string;
   message: string;
   timestamp: string;
@@ -13,4 +13,5 @@ export * from './auth';
 export * from './email-verification';
 export * from './review';
 export * from './affinity';
+export * from './nlp';
 export * from './correction';

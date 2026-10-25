@@ -1,4 +1,4 @@
-import { Module } from '@nestjs/common';
+﻿import { Module } from '@nestjs/common';
 import { ConfigModule } from '@nestjs/config';
 import { resolve } from 'node:path';
 import { validateEnvironment } from './config/environment';
@@ -12,7 +12,9 @@ import { ProfileModule } from './modules/profile/profile.module';
 import { EventsModule } from './modules/events/events.module';
 import { MentorshipModule } from './modules/mentorship/mentorship.module';
 import { ReportsModule } from './modules/reports/reports.module';
-import { ChatModule } from './modules/chat/chat.module'; // 👈 Ya estaba importado
+import { NlpModule } from './modules/nlp/nlp.module';
+import { RadarModule } from './modules/radar/radar.module';
+import { ChatModule } from './modules/chat/chat.module';
 
 @Module({
   imports: [
@@ -30,7 +32,9 @@ import { ChatModule } from './modules/chat/chat.module'; // 👈 Ya estaba impor
     EventsModule,
     MentorshipModule,
     ReportsModule,
-    ChatModule, 
+    NlpModule,
+    RadarModule,
+    ChatModule,
   ],
   controllers: [HealthController],
 })
