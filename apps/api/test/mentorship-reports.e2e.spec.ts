@@ -134,7 +134,7 @@ describe('Mentorías y reportería: contratos HTTP y autorización', () => {
     mentors.deactivate.mockResolvedValue({ ...mentor, active: false });
     mentors.directory.mockResolvedValue({
       entries: [
-        { mentor, areas: [], interests: [], availability: 'AVAILABLE', cargo: null, empresa: null },
+        { mentor, areas: [], interests: [], availability: 'DISPONIBLE', cargo: null, empresa: null },
       ],
       total: 1,
       catalog: [],
@@ -143,7 +143,7 @@ describe('Mentorías y reportería: contratos HTTP y autorización', () => {
       mentor,
       areas: [{ id: careerId, name: 'Backend' }],
       interests: [],
-      availability: 'AVAILABLE',
+      availability: 'DISPONIBLE',
       canRequest: true,
       schedules: [1, 2, 3, 4, 5, 6, 7].map((weekday) => ({ weekday, start: '00:00', end: '23:59' })),
       bookings: [],

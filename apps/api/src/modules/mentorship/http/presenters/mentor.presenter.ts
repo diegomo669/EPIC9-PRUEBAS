@@ -1,4 +1,5 @@
 import type {
+  AvailabilityStatus,
   DirectoryCatalogGroup,
   DirectoryMentor,
   InterestCatalogGroup,
@@ -11,6 +12,16 @@ import type {
 import type { MentorFilterOptions } from '../../application/contracts/mentor-directory-filters';
 
 const day = (date: Date | null) => date?.toISOString().slice(0, 10) ?? null;
+
+/** El dominio y la BD usan estos estados; el contrato público (shared-types) expone los equivalentes en inglés. */
+const PUBLIC_AVAILABILITY: Record<AvailabilityStatus, 'AVAILABLE' | 'PAUSED' | 'UNAVAILABLE'> = {
+  DISPONIBLE: 'AVAILABLE',
+  EN_PAUSA: 'PAUSED',
+  NO_DISPONIBLE: 'UNAVAILABLE',
+};
+
+const publicAvailability = (status: AvailabilityStatus | null) =>
+  status ? PUBLIC_AVAILABILITY[status] : null;
 
 export function presentMentor(mentor: Mentor) {
   return {
@@ -53,7 +64,7 @@ export function presentDirectory(entry: DirectoryMentor) {
       nombre: interest.name,
       area: { id: interest.area.id, nombre: interest.area.name },
     })),
-    availabilityStatus: entry.availability,
+    availabilityStatus: publicAvailability(entry.availability),
   };
 }
 
@@ -143,7 +154,7 @@ export function presentMentorDetail(profile: MentorProfile) {
     relevantInfo: profile.mentor.relevantInformation,
     technicalAreas: profile.areas.map((area) => area.name),
     interests: [...interests.values()],
-    availability: profile.availability,
+    availability: publicAvailability(profile.availability),
     weekLabel: weekLabel(profile.week.from, profile.week.to),
     slots: profile.week.slots.map((slot) => {
       const { day: dayOfMonth, month } = dayMonth(slot.date);
