@@ -7,10 +7,10 @@ describe('Políticas del mentor', () => {
   ];
 
   it('solo recibe solicitudes un mentor activo y disponible', () => {
-    expect(canReceiveMentorship(true, 'AVAILABLE')).toBe(true);
-    expect(canReceiveMentorship(true, 'PAUSED')).toBe(false);
+    expect(canReceiveMentorship(true, 'DISPONIBLE')).toBe(true);
+    expect(canReceiveMentorship(true, 'EN_PAUSA')).toBe(false);
     expect(canReceiveMentorship(true, null)).toBe(false);
-    expect(canReceiveMentorship(false, 'AVAILABLE')).toBe(false);
+    expect(canReceiveMentorship(false, 'DISPONIBLE')).toBe(false);
   });
 
   it('acepta un bloque dentro del horario del mentor', () => {

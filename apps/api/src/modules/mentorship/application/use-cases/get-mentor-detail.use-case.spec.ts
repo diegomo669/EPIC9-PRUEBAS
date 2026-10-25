@@ -22,7 +22,7 @@ function detail(overrides: Partial<MentorDetail> = {}): MentorDetail {
     },
     areas: [],
     interests: [],
-    availability: 'AVAILABLE',
+    availability: 'DISPONIBLE',
     canRequest: true,
     schedules: [{ weekday: 2, start: '18:00', end: '20:00' }],
     bookings: [{ date: '2026-10-27', start: '19:00', end: '20:00' }],
@@ -53,7 +53,7 @@ describe('GetMentorDetailUseCase', () => {
   });
 
   it('no ofrece horarios si el mentor no puede recibir solicitudes', async () => {
-    repository.detail.mockResolvedValue(detail({ availability: 'PAUSED', canRequest: false }));
+    repository.detail.mockResolvedValue(detail({ availability: 'EN_PAUSA', canRequest: false }));
     await expect(useCase.execute('mentor-1')).resolves.toMatchObject({
       week: { slots: [] },
     });

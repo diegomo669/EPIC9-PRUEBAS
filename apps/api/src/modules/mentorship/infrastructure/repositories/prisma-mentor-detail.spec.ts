@@ -23,7 +23,7 @@ function row(overrides: Record<string, unknown> = {}) {
       experiencia_laboral_registros: [{ cargo: 'Backend Developer', empresa: 'Acme' }],
     },
     disponibilidad_mentor_registros: [
-      { estado: 'AVAILABLE', fecha_actualizacion: new Date('2026-10-20') },
+      { estado: 'DISPONIBLE', fecha_actualizacion: new Date('2026-10-20') },
     ],
     mentor_area_registros: [
       { area: { ...backend, padre: null } },
@@ -85,7 +85,7 @@ describe('PrismaMentorRepository.detail', () => {
     findFirst.mockResolvedValue(row());
     const profile = await detail();
     expect(profile).toMatchObject({
-      availability: 'AVAILABLE',
+      availability: 'DISPONIBLE',
       canRequest: true,
       position: 'Backend Developer',
       company: 'Acme',
@@ -126,10 +126,10 @@ describe('PrismaMentorRepository.detail', () => {
 
   it('muestra un mentor en pausa sin permitir solicitudes', async () => {
     findFirst.mockResolvedValue(
-      row({ disponibilidad_mentor_registros: [{ estado: 'PAUSED', fecha_actualizacion: null }] }),
+      row({ disponibilidad_mentor_registros: [{ estado: 'EN_PAUSA', fecha_actualizacion: null }] }),
     );
     await expect(detail()).resolves.toMatchObject({
-      availability: 'PAUSED',
+      availability: 'EN_PAUSA',
       canRequest: false,
       bookings: [],
     });
@@ -138,7 +138,7 @@ describe('PrismaMentorRepository.detail', () => {
 
   it('oculta el perfil de un mentor no disponible', async () => {
     findFirst.mockResolvedValue(
-      row({ disponibilidad_mentor_registros: [{ estado: 'UNAVAILABLE', fecha_actualizacion: null }] }),
+      row({ disponibilidad_mentor_registros: [{ estado: 'NO_DISPONIBLE', fecha_actualizacion: null }] }),
     );
     await expect(detail()).resolves.toBeNull();
   });

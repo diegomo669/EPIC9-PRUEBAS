@@ -54,7 +54,7 @@ export class PrismaMentorRepository implements MentorRepository {
       WHERE m.esta_activo IS TRUE
         AND u.estado = 'ACTIVO'
         AND u.rol = 'titulado'
-        AND latest_availability.estado = 'AVAILABLE'
+        AND latest_availability.estado = 'DISPONIBLE'
     `;
     const page =
       query.limit === undefined
@@ -367,7 +367,7 @@ export class PrismaMentorRepository implements MentorRepository {
       },
     });
     const availability = toAvailability(row?.disponibilidad_mentor_registros[0]).status;
-    if (!row || availability === 'UNAVAILABLE') {
+    if (!row || availability === 'NO_DISPONIBLE') {
       return null;
     }
     const areas = new Map<string, AreaReference>();
