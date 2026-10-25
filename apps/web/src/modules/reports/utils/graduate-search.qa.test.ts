@@ -32,7 +32,7 @@ describe('Buscador de titulados · casos de QA', () => {
 
   it('Bug 4: espacios repetidos dan el mismo resultado que un solo espacio', () => {
     const withSingle = searchAndRankGraduates(graduates, 'Mariana Elena');
-    const withDouble = searchAndRankGraduates(graduates, 'Mariana    Elena');
+    const withDouble = searchAndRankGraduates(graduates, 'Mariana' + ' '.repeat(4) + 'Elena');
     expect(withSingle).toHaveLength(1);
     expect(withDouble).toEqual(withSingle);
   });
