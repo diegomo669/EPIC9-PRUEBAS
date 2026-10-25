@@ -1,8 +1,7 @@
 import { z } from 'zod';
 import type { MentorDirectoryResponse } from '@umsspira/shared-types';
 import { apiUrl } from '@/shared/services/api-contract';
-import { authenticatedFetch, SessionError } from '@/shared/services/auth-session';
-import { mentorAvailabilityStatuses } from './mentor-availability-api';
+import { authenticatedFetch, ensureAccessToken, getAccessToken, SessionError } from '@/shared/services/auth-session';
 import {
   filterDirectory, uniqueMentors,
   type DirectoryMentor, type DirectoryPage, type DirectoryQuery,
@@ -11,6 +10,12 @@ import {
 const areaReference = z.object({ id: z.string().min(1), nombre: z.string() });
 const interestReference = areaReference.extend({ area: areaReference });
 
+/**
+ * Vocabulario público de `availabilityStatus` en el contrato del directorio (HU 6.7).
+ * No confundir con los estados en español de PATCH /mentorship/availability.
+ */
+const directoryAvailabilityStatuses = ['AVAILABLE', 'PAUSED', 'UNAVAILABLE'] as const;
+
 const directoryResponse: z.ZodType<MentorDirectoryResponse> = z.object({ data: z.array(z.object({
   id: z.string().min(1),
   nombre: z.string(),
@@ -18,7 +23,7 @@ const directoryResponse: z.ZodType<MentorDirectoryResponse> = z.object({ data: z
   foto_perfil: z.string().nullable(),
   esta_activo: z.boolean().nullable(),
   areas: z.array(areaReference),
-  availabilityStatus: z.enum(mentorAvailabilityStatuses).nullable(),
+  availabilityStatus: z.enum(directoryAvailabilityStatuses).nullable(),
   cargo: z.string().nullable(),
   empresa: z.string().nullable(),
   intereses: z.array(interestReference),
@@ -39,6 +44,8 @@ export async function getMentorDirectory(query: DirectoryQuery, signal?: AbortSi
   // sobre la colección completa porque todavía no acepta esos parámetros.
   const params = new URLSearchParams({ offset: String(query.offset), limit: String(query.limit) });
   const endpoint = apiUrl('/api/v1/mentorship/profiles') + (filtered ? '' : `?${params}`);
+  // El directorio exige sesión: nunca se consulta la API de forma anónima.
+  if (!getAccessToken()) await ensureAccessToken();
   // Use the existing session client. No reads from other mentors' private endpoints.
   const response = await authenticatedFetch(endpoint, {
     method: 'GET', cache: 'no-store', credentials: 'omit', signal,

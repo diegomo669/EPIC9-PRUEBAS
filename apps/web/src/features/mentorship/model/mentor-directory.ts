@@ -1,5 +1,8 @@
+import type { MentorDirectoryResponse } from '@umsspira/shared-types';
 import type { InterestArea, InterestConfiguration } from './mentor-interests';
-import type { MentorAvailabilityStatus } from '../services/mentor-availability-api';
+
+/** Vocabulario del contrato público del directorio (HU 6.7). `null` = sin estado registrado. */
+export type DirectoryAvailabilityStatus = MentorDirectoryResponse['data'][number]['availabilityStatus'];
 
 /** Public directory data only; contact and private profile fields are excluded. */
 export interface DirectoryMentor {
@@ -8,7 +11,7 @@ export interface DirectoryMentor {
   description: string | null;
   photoUrl: string | null;
   areas: { id: string; name: string }[];
-  availability: MentorAvailabilityStatus | null;
+  availability: DirectoryAvailabilityStatus;
   /** Cargo and company from the directory's public response, when provided. */
   profession?: string;
   interests?: { id: string; name: string; areaId: string }[];
