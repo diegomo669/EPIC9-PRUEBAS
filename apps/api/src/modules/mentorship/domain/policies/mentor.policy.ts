@@ -15,7 +15,7 @@ export function canReceiveMentorship(
   active: boolean,
   availability: AvailabilityStatus | null,
 ): boolean {
-  return active && availability === 'AVAILABLE';
+  return active && availability === 'DISPONIBLE';
 }
 
 export function isWithinSchedule(

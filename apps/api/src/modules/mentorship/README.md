@@ -19,6 +19,7 @@ La información profesional usa columnas explícitas. La migración convierte el
 ## Disponibilidad
 
 El directorio de la HU-6.7 muestra únicamente mentores cuyo último estado es AVAILABLE. PAUSED, UNAVAILABLE y la ausencia de disponibilidad los excluyen. Consultar no crea registros. La política `canReceiveMentorship` sigue determinando quién puede recibir solicitudes en otros flujos. El perfil detallado de la HU-6.9 muestra mentores activos AVAILABLE, PAUSED o sin estado (estos dos sin poder solicitar) y responde 404 si el último estado es UNAVAILABLE.
+DISPONIBLE acepta solicitudes, EN_PAUSA conserva la visibilidad sin aceptarlas y NO_DISPONIBLE oculta el perfil del directorio. Sin estado registrado también permanece visible, pero no recibe solicitudes. Consultar no crea registros.
 
 El módulo exporta MENTOR_AVAILABILITY_REPOSITORY mediante un port. Otros módulos pueden consultar canReceiveRequests sin importar Prisma ni consultar directamente estas tablas.
 
