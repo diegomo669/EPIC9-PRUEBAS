@@ -1,3 +1,5 @@
+import { ActivationAccessController } from './http/controllers/activation-access.controller';
+import { ActivationAccessService } from './application/services/activation-access.service';
 import { ObservedApplicationController } from './http/controllers/observed-application.controller';
 import { ObservedApplicationService } from './application/services/observed-application.service';
 import { CorrectionTokenService } from './application/services/correction-token.service';
@@ -33,6 +35,7 @@ import { GetApplicationMetricsController } from './http/controllers/get-applicat
 @Module({
   imports: [PrismaModule, AuthModule],
   controllers: [
+    ActivationAccessController,
     UpdateRegistrationController,
     GetDraftDocumentController,
     RenewActivationController,
@@ -56,6 +59,7 @@ import { GetApplicationMetricsController } from './http/controllers/get-applicat
     ObservedApplicationController,
   ],
   providers: [
+    ActivationAccessService,
     ...registrationsProviders,
     SmtpOutboxWorker,
     RegistrationTrafficGuard,
