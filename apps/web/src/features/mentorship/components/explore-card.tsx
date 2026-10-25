@@ -1,6 +1,6 @@
 import type { ComponentType } from 'react';
-import { ArrowRightIcon } from 'lucide-react';
 import Link from 'next/link';
+import { ArrowRightIcon } from 'lucide-react';
 
 export function ExploreCard({ icon: Icon }: { icon: ComponentType<{ className?: string }> }) {
   return (
