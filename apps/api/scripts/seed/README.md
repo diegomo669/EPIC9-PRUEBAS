@@ -10,24 +10,26 @@ pnpm --filter api db:seed:demo
 
 ## Qué queda disponible
 
-| Parte        | Datos iniciales                                                                                                               |
-| ------------ | ----------------------------------------------------------------------------------------------------------------------------- |
-| Catálogos    | Roles, permisos, Ingeniería de Sistemas, PDF/JPG/PNG, modalidades de trabajo, cinco áreas profesionales y tipo de reporte     |
-| Acceso       | Titulado, administrador y empresa con sus perfiles relacionados                                                               |
-| Épica 1      | Cuatro solicitudes: pendiente, aprobada, observada y rechazada; detalles, PDF descargables, dictámenes y auditoría de ejemplo |
-| Épica 2      | Formación, experiencia laboral vigente y certificación del titulado                                                           |
-| Épica 3      | Descripción profesional, palabras clave, alias, pesos, término no mapeado y radar de demostración                             |
-| Épicas 4 y 5 | Empresa con teléfono, dirección y sector; requerimiento con habilidad; vacante vinculada al requerimiento                     |
-| Épica 6      | El titulado participa como mentor activo, con especialidad, interés y disponibilidad                                          |
-| Épica 7      | Un evento publicado, un borrador del administrador y una inscripción del titulado                                             |
-| Épica 8      | Reutiliza la identidad y catálogos compartidos; los dispositivos push los registra cada navegador                             |
-| Épica 9      | Encuesta en borrador; indicadores y listados con las solicitudes y el mentor ya cargados                                      |
+| Parte        | Datos iniciales                                                                                                                 |
+| ------------ | ------------------------------------------------------------------------------------------------------------------------------- |
+| Catálogos    | Roles, permisos, Ingeniería de Sistemas, PDF/JPG/PNG, modalidades de trabajo, cinco áreas profesionales y tipo de reporte       |
+| Acceso       | Titulado, administrador y empresa con sus perfiles relacionados                                                                 |
+| Épica 1      | Cuatro solicitudes: pendiente, aprobada, observada y rechazada; detalles, PDF descargables, dictámenes y auditoría de ejemplo   |
+| Épica 2      | Formación, experiencia laboral vigente y certificación del titulado                                                             |
+| Épica 3      | Descripción profesional, palabras clave, alias, pesos, término no mapeado y radar de demostración                               |
+| Épicas 4 y 5 | Empresa con teléfono, dirección y sector; requerimiento con habilidad; vacante vinculada al requerimiento                       |
+| Épica 6      | El titulado participa como mentor activo, con especialidad, interés y disponibilidad                                            |
+| Épica 7      | Un evento publicado, un borrador del administrador y una inscripción del titulado                                               |
+| Épica 8      | Reutiliza la identidad y catálogos compartidos; los dispositivos push los registra cada navegador                               |
+| Épica 9      | Encuesta en borrador, 40 respuestas laborales y titulados ficticios; los indicadores/listados usan también solicitudes y mentor |
 
 Son datos ficticios. No se generan sesiones, renovaciones, códigos de activación, correos pendientes ni suscripciones push. Los respaldos de certificación se cargan mediante el endpoint correspondiente: la certificación inicial está `sin_respaldo`. No se insertan aprobaciones sin evidencia ni archivos de reporte inexistentes.
 
 El radar usa `version_algoritmo=demo-seed-v1`: es un ejemplo persistido, no el resultado de ejecutar el motor NLP. La seed no indexa Elasticsearch ni inicia servicios externos.
 
 Las fechas de los eventos se calculan para 30 y 45 días después de la primera carga. Las filas existentes mantienen sus fechas cuando se repite el comando.
+
+La seed de la épica 9 agrega 39 perfiles de titulado ficticios sin cuentas de acceso y 40 respuestas asociadas a ellos y al titulado compartido. Así se respeta la restricción de una respuesta por titulado y encuesta; repetir la carga conserva los registros existentes.
 
 | Correo                 | Contraseña     | Rol           |
 | ---------------------- | -------------- | ------------- |
@@ -54,7 +56,7 @@ El mentor utiliza la cuenta de titulado; no es un rol de acceso independiente. L
 | `epic-6.ts`        | Mentores, especialidades y disponibilidad                                             |
 | `epic-7.ts`        | Eventos e inscripciones                                                               |
 | `epic-8.ts`        | Registro opcional de dispositivos para un flujo real de pruebas                       |
-| `epic-9.ts`        | Reportes y encuestas                                                                  |
+| `epic-9.ts`        | Reportes, encuestas y respuestas laborales con titulados ficticios para pruebas       |
 
 Cada equipo puede ampliar los arreglos tipados de su archivo. Los catálogos que consumen varios módulos se mantienen en `catalogs.ts`, para no duplicarlos en cada épica. Se conservan los UUID de las tres cuentas y las cinco áreas que ya existían.
 
