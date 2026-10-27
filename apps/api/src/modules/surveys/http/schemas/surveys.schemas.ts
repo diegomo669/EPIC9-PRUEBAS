@@ -2,10 +2,8 @@ import { z } from 'zod';
 
 export const submitSurveySchema = z
   .object({
-    idEncuesta: z.string().uuid(),
-    idTitulado: z.string().uuid(),
-
-    trabajaActualmente: z.boolean(),
+    id_encuesta: z.string().uuid().optional(),
+    condicion_laboral: z.boolean(),
 
     cargo: z.string().trim().min(1).max(150).optional(),
     empresa: z.string().trim().min(1).max(200).optional(),
@@ -13,19 +11,20 @@ export const submitSurveySchema = z
 
     modalidad: z.string().trim().min(1).optional(),
 
-    rangoSalarial: z.string().trim().min(1).optional(),
+    salario_mensual: z.string().trim().min(1).max(30).optional(),
 
-    tiempoInsercion: z.string().trim().min(1).optional(),
+    tiempo_insercion: z.string().trim().min(1).max(40).optional(),
   })
   .strict()
   .superRefine((data, ctx) => {
-    if (data.trabajaActualmente) {
+    if (data.condicion_laboral) {
       const requiredFields = [
         'cargo',
         'empresa',
         'area',
         'modalidad',
-        'rangoSalarial',
+        'salario_mensual',
+        'tiempo_insercion',
       ] as const;
 
       for (const field of requiredFields) {
@@ -43,7 +42,8 @@ export const submitSurveySchema = z
         'empresa',
         'area',
         'modalidad',
-        'rangoSalarial',
+        'salario_mensual',
+        'tiempo_insercion',
       ] as const;
 
       for (const field of jobFields) {
@@ -60,4 +60,3 @@ export const submitSurveySchema = z
 
 export type SubmitSurveyDto =
   z.infer<typeof submitSurveySchema>;
-  

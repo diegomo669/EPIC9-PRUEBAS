@@ -1,41 +1,122 @@
 'use client';
 
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { useRouter } from 'next/navigation';
 import { useSurveyDraft } from '../hooks/use-survey-draft';
+import { useSurveyForm, type SurveyWorkFields } from '../hooks/use-survey-form';
+import { useSurveySubmit } from '../hooks/use-survey-submit';
 import { useSurveyUserId } from '../hooks/use-survey-user-id';
 import { SurveyDraftNotice } from './survey-draft-notice';
 import { Button } from '@/shared/components/button';
-import type { WorkCondition } from '../types/survey.types';
+import { SurveyJobInputs } from './survey-job-inputs';
+import { SurveySalarySelector } from './survey-salary-selectors';
+import { SurveyInsertionTimeInput } from './survey-insertion-time-input';
+import { SurveyProgressBar } from './survey-progress-bar';
+import { SurveyConfidentialNotice } from './survey-confidential-notice';
+import { SurveyOfflineBanner } from './survey-offline-banner';
+import { SurveyReviewModal, type SurveyReviewAnswer } from './survey-review-modal';
+import type { SurveyDraft, WorkCondition } from '../types/survey.types';
+import type { WorkModality } from '../types/survey-job.types';
 import { SurveyWorkConditionSelector } from './survey-work-condition-selector';
 
 export function SurveyContainer() {
-  // TODO: reemplazar por use-survey-form (Task 1.2, Anelis)
-  const [workCondition, setWorkCondition] = useState<WorkCondition | null>(null);
+  const [isReviewOpen, setIsReviewOpen] = useState(false);
   const [error, setError] = useState<string | undefined>();
   const router = useRouter();
   const userId = useSurveyUserId();
-  const { draft, status, saveDraft } = useSurveyDraft(userId);
+  const { draft, status, saveDraft, clearDraft } = useSurveyDraft(userId);
+  const form = useSurveyForm();
+  const submission = useSurveySubmit();
 
   useEffect(() => {
-    if (draft) setWorkCondition(draft.workCondition);
+    if (!draft) return;
+    form.replaceValues({
+      condicion_laboral: draft.workCondition === 'works',
+      cargo: draft.cargo,
+      empresa: draft.empresa,
+      area: draft.area,
+      modalidad: draft.modalidad,
+    });
   }, [draft]);
 
+  const workCondition: WorkCondition | null = form.values.condicion_laboral === null
+    ? null
+    : form.values.condicion_laboral ? 'works' : 'not-works';
+
+  const persistDraft = () => {
+    if (!form.values.condicion_laboral) {
+      saveDraft({ workCondition: 'not-works' });
+      return;
+    }
+    saveDraft({
+      workCondition: 'works',
+      cargo: form.values.cargo,
+      empresa: form.values.empresa,
+      area: form.values.area,
+      modalidad: form.values.modalidad?.toLowerCase() as SurveyDraft['modalidad'],
+    });
+  };
+
   const handleChange = (value: WorkCondition) => {
-    setWorkCondition(value);
+    form.setWorkCondition(value === 'works');
     setError(undefined);
-    // TODO (Task 1.2): guardar el formulario completo cuando exista use-survey-form
-    saveDraft({ workCondition: value });
   };
 
   const handleNext = () => {
-    if (!workCondition) {
+    if (!form.canProceed) {
       setError('Seleccione su condición laboral actual');
       return;
     }
-    // TODO (Task 1.2 + HU-002): avanzar al siguiente paso cuando use-survey-form
-    // y los campos laborales estén integrados.
+    if (hasWorkErrors) return;
+    persistDraft();
+    setIsReviewOpen(true);
   };
+
+  const handleConfirm = async () => {
+    if (form.values.condicion_laboral === null || hasWorkErrors) return;
+
+    const sent = await submission.submit({
+      condicion_laboral: form.values.condicion_laboral,
+      cargo: form.values.cargo,
+      empresa: form.values.empresa,
+      area: form.values.area,
+      modalidad: form.values.modalidad ?? undefined,
+      salario_mensual: form.values.salario_mensual,
+      tiempo_insercion: form.values.tiempo_insercion,
+    });
+
+    if (sent) {
+      clearDraft();
+      setIsReviewOpen(false);
+    }
+  };
+
+  const reviewAnswers = useMemo<SurveyReviewAnswer[]>(() => {
+    const answers: SurveyReviewAnswer[] = [{
+      id: 'condicion-laboral', question: 'Condición laboral',
+      answer: form.values.condicion_laboral ? 'Trabaja' : 'No trabaja', fullWidth: true,
+    }];
+    if (!form.values.condicion_laboral) return answers;
+    return answers.concat([
+      { id: 'cargo', question: 'Cargo', answer: form.values.cargo },
+      { id: 'empresa', question: 'Empresa', answer: form.values.empresa },
+      { id: 'area', question: 'Área o departamento', answer: form.values.area },
+      { id: 'modalidad', question: 'Modalidad', answer: form.values.modalidad },
+      { id: 'salario', question: 'Salario mensual', answer: form.values.salario_mensual },
+      { id: 'insercion', question: 'Inserción laboral', answer: form.values.tiempo_insercion ? `${form.values.tiempo_insercion} meses` : '' },
+    ]);
+  }, [form.values]);
+
+  const fieldErrors: Record<keyof SurveyWorkFields, string | undefined> = {
+    cargo: form.values.condicion_laboral && !form.values.cargo.trim() ? 'Ingrese su cargo' : undefined,
+    empresa: form.values.condicion_laboral && !form.values.empresa.trim() ? 'Ingrese la empresa' : undefined,
+    area: form.values.condicion_laboral && !form.values.area.trim() ? 'Ingrese el área o departamento' : undefined,
+    modalidad: form.values.condicion_laboral && !form.values.modalidad ? 'Seleccione una modalidad' : undefined,
+    salario_mensual: form.values.condicion_laboral && !form.values.salario_mensual ? 'Seleccione un rango' : undefined,
+    tiempo_insercion: form.values.condicion_laboral && !form.values.tiempo_insercion ? 'Ingrese los meses' : undefined,
+  };
+
+  const hasWorkErrors = form.values.condicion_laboral === true && Object.values(fieldErrors).some(Boolean);
 
   return (
     <main className="mx-auto w-full max-w-4xl px-4 py-6 sm:px-6">
@@ -68,6 +149,7 @@ export function SurveyContainer() {
       </ol>
 
       <section className="mt-6 rounded-xl border border-oatmeal bg-white p-4 sm:p-6">
+        <SurveyOfflineBanner />
         <SurveyWorkConditionSelector
           value={workCondition}
           onChange={handleChange}
@@ -89,8 +171,33 @@ export function SurveyContainer() {
         )}
 
         {workCondition === 'works' && (
-          <div>
-            {/* Aquí irán los campos de HU-002 (Task 2.1 y 2.2) */}
+          <div className="space-y-5">
+            <SurveyProgressBar values={form.values} />
+            <SurveyJobInputs
+              values={{
+                cargo: form.values.cargo,
+                empresa: form.values.empresa,
+                area: form.values.area,
+                modalidad: form.values.modalidad as WorkModality | null,
+              }}
+              errors={fieldErrors}
+              touched={{ cargo: true, empresa: true, area: true, modalidad: true }}
+              onChange={(field, value) => form.setWorkField(field, String(value))}
+              onBlur={() => undefined}
+            />
+            <div className="grid grid-cols-1 gap-4 sm:grid-cols-2">
+              <SurveySalarySelector
+                value={form.values.salario_mensual}
+                onChange={(value) => form.setWorkField('salario_mensual', value)}
+                error={fieldErrors.salario_mensual}
+              />
+              <SurveyInsertionTimeInput
+                value={form.values.tiempo_insercion}
+                onChange={(value) => form.setWorkField('tiempo_insercion', value)}
+                error={fieldErrors.tiempo_insercion}
+              />
+            </div>
+            <SurveyConfidentialNotice />
           </div>
         )}
 
@@ -123,6 +230,25 @@ export function SurveyContainer() {
           Siguiente →
         </Button>
       </div>
+      <SurveyReviewModal
+        isOpen={isReviewOpen}
+        answers={reviewAnswers}
+        isSubmitting={submission.isSubmitting}
+        onClose={() => setIsReviewOpen(false)}
+        onConfirm={handleConfirm}
+      />
+      {submission.message && (
+        <p
+          role="status"
+          className={`mt-4 rounded-lg border p-3 text-sm ${
+            submission.status === 'success'
+              ? 'border-green-200 bg-green-50 text-green-800'
+              : 'border-red-200 bg-red-50 text-red-800'
+          }`}
+        >
+          {submission.message}
+        </p>
+      )}
     </main>
   );
 }
