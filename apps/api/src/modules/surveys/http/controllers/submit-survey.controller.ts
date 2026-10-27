@@ -44,12 +44,16 @@ export class SubmitSurveyController {
     }
 
     const tituladoId = actor.scopes.graduateId;
-    if (!tituladoId) throw new NotFoundException('Perfil de titulado no encontrado');
+    if (!tituladoId) {
+      throw new NotFoundException('Perfil de titulado no encontrado');
+    }
 
     const survey = result.data.id_encuesta
       ? await this.prisma.encuesta.findUnique({ where: { id: result.data.id_encuesta } })
       : await this.prisma.encuesta.findFirst({ orderBy: { fecha_creacion: 'desc' } });
-    if (!survey) throw new NotFoundException('No existe una encuesta disponible');
+    if (!survey) {
+      throw new NotFoundException('No existe una encuesta disponible');
+    }
 
     try {
       const saved = await this.repository.save({
