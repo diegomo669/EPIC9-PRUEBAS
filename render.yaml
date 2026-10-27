@@ -3,7 +3,9 @@
 
 services:
   - type: web
-    name: umsspira-api
+    # Servicio aislado para el repositorio de pruebas EPIC9-PRUEBAS.
+    # No comparte servicio ni despliegue con el repositorio UMSSPIRA original.
+    name: umsspira-epic9-pruebas-api
     runtime: node
 
     # Elegir al crear el servicio la región más cercana al PostgreSQL utilizado.
@@ -12,8 +14,8 @@ services:
     # El plan gratuito se duerme tras 15 minutos sin tráfico.
     plan: free
 
-    # Rama de integracion: aqui se mergean todas las epicas.
-    branch: dev
+    # El repositorio de pruebas publica el contenido integrado de Epic 9 en main.
+    branch: main
 
     # La raíz conserva pnpm-workspace.yaml y el lockfile; solo se compila la API.
     rootDir: .
@@ -44,9 +46,9 @@ services:
       - key: AUTH_JWT_SECRET
         sync: false
 
-      # Origen del frontend, sin /login. Para otros despliegues usar su propio origen.
+      # Origen del frontend aislado, sin /login. Render lo solicita al crear el servicio.
       - key: CORS_ORIGINS
-        value: https://umsspira-web.vercel.app
+        sync: false
 
       # Configurar con un proveedor real para registro, verificación y activación.
       # En Free, los puertos SMTP 25/465/587 están bloqueados: consultar la guía.
