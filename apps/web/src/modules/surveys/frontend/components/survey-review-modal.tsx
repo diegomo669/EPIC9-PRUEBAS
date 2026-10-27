@@ -145,7 +145,7 @@ export function SurveyReviewModal({
             disabled={isSubmitting}
             className="rounded-xl border border-[#c9c1b1] px-8 py-4 text-xl font-semibold text-[#1b2632] hover:bg-[#f5f3ee] disabled:opacity-50"
           >
-            Volver a editar
+            Volver y editar
           </button>
 
           {/*

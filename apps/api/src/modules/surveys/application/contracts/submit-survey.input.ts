@@ -1,11 +1,11 @@
 export interface SubmitSurveyInput {
   idEncuesta: string;
   idTitulado: string;
-  trabajaActualmente: boolean;
+  condicionLaboral: boolean;
   cargo?: string;
   empresa?: string;
   area?: string;
   modalidad?: string;
-  rangoSalarial?: string;
+  salarioMensual?: string;
   tiempoInsercion?: string;
 }

@@ -1,5 +1,5 @@
 import type { Prisma, PrismaClient } from '../../src/generated/prisma/client';
-import { DEMO_ADMIN_ASSIGNMENT_ID, DEMO_CAREER_ID, DEMO_GRADUATE_ID } from './demo-accounts';
+import { DEMO_ADMIN_ASSIGNMENT_ID, DEMO_CAREER_ID } from './demo-accounts';
 
 // Los reportes HTTP se generan con las solicitudes de la épica 1; no son archivos estáticos.
 const DEMO_SURVEY_ID = '99000000-0000-4000-8000-000000000001';
@@ -78,7 +78,8 @@ const demoGraduates: Prisma.TituladoCreateManyInput[] = graduateNames.map(
   }),
 );
 
-const respondentIds = [DEMO_GRADUATE_ID, ...demoGraduates.map(({ id }) => id)];
+// La cuenta titulado@umss.edu.bo queda sin respuesta para que QA pueda enviar la encuesta y ver el guardado.
+const respondentIds = demoGraduates.map(({ id }) => id);
 
 type EmploymentResponse = Omit<
   Prisma.RespuestaEncuestaCreateManyInput,
@@ -93,7 +94,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Tecnología',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -102,7 +103,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Remoto',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   {
     condicionLaboral: 'true',
@@ -111,7 +112,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Tecnología',
     modalidad: 'Presencial',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   null,
   {
@@ -121,7 +122,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -130,7 +131,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Gestión de proyectos',
     modalidad: 'Presencial',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'Más de 12 meses',
+    tiempoInsercion: '15',
   },
   {
     condicionLaboral: 'true',
@@ -139,7 +140,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Tecnología',
     modalidad: 'Remoto',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   null,
   {
@@ -149,7 +150,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -158,7 +159,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Consultoría tecnológica',
     modalidad: 'Remoto',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   {
     condicionLaboral: 'true',
@@ -167,7 +168,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Infraestructura',
     modalidad: 'Presencial',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   null,
   {
@@ -177,7 +178,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Remoto',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -186,7 +187,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Soporte técnico',
     modalidad: 'Presencial',
     salarioMensual: '0–2.999',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   {
     condicionLaboral: 'true',
@@ -195,7 +196,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Seguridad informática',
     modalidad: 'Hibrido',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   null,
   {
@@ -205,7 +206,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Análisis de negocio',
     modalidad: 'Hibrido',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -214,7 +215,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Remoto',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   {
     condicionLaboral: 'true',
@@ -223,7 +224,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Gestión de proyectos',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'Más de 12 meses',
+    tiempoInsercion: '15',
   },
   null,
   {
@@ -233,7 +234,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Infraestructura',
     modalidad: 'Remoto',
     salarioMensual: '12.001–21.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -242,7 +243,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Análisis de datos',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   {
     condicionLaboral: 'true',
@@ -251,7 +252,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Soporte técnico',
     modalidad: 'Presencial',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   null,
   {
@@ -261,7 +262,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Hibrido',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -270,7 +271,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Infraestructura',
     modalidad: 'Presencial',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'Más de 12 meses',
+    tiempoInsercion: '15',
   },
   {
     condicionLaboral: 'true',
@@ -279,7 +280,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Consultoría tecnológica',
     modalidad: 'Remoto',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   null,
   {
@@ -289,7 +290,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Infraestructura',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   {
     condicionLaboral: 'true',
@@ -298,7 +299,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Presencial',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   {
     condicionLaboral: 'true',
@@ -307,7 +308,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Análisis de datos',
     modalidad: 'Remoto',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   null,
   {
@@ -317,7 +318,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Gestión de proyectos',
     modalidad: 'Hibrido',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   {
     condicionLaboral: 'true',
@@ -326,7 +327,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Soporte técnico',
     modalidad: 'Presencial',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -335,7 +336,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Infraestructura',
     modalidad: 'Remoto',
     salarioMensual: '8.001–12.000',
-    tiempoInsercion: 'Menos de 3 meses',
+    tiempoInsercion: '2',
   },
   null,
   {
@@ -345,7 +346,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Análisis de negocio',
     modalidad: 'Hibrido',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'Más de 12 meses',
+    tiempoInsercion: '15',
   },
   {
     condicionLaboral: 'true',
@@ -354,7 +355,7 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Desarrollo de software',
     modalidad: 'Remoto',
     salarioMensual: '5.001–8.000',
-    tiempoInsercion: 'De 3 a 6 meses',
+    tiempoInsercion: '4',
   },
   {
     condicionLaboral: 'true',
@@ -363,12 +364,12 @@ const responseScenarios: Array<EmploymentResponse | null> = [
     area: 'Seguridad informática',
     modalidad: 'Presencial',
     salarioMensual: '3.000–5.000',
-    tiempoInsercion: 'De 6 a 12 meses',
+    tiempoInsercion: '9',
   },
   null,
 ];
 
-const respuestas: Prisma.RespuestaEncuestaCreateManyInput[] = responseScenarios.map(
+const respuestas: Prisma.RespuestaEncuestaCreateManyInput[] = responseScenarios.slice(0, respondentIds.length).map(
   (scenario, index) => {
     const idTitulado = respondentIds[index];
     if (!idTitulado) {
@@ -379,7 +380,8 @@ const respuestas: Prisma.RespuestaEncuestaCreateManyInput[] = responseScenarios.
       id: demoId('99200000', index + 1),
       idEncuesta: DEMO_SURVEY_ID,
       idTitulado,
-      fechaEnvio: new Date(Date.UTC(2026, 0, 15 + index * 8)),
+      // Cada 7 días desde el 15/01/2026: la última queda antes de la fecha actual del sprint.
+      fechaEnvio: new Date(Date.UTC(2026, 0, 15 + index * 7)),
     };
   },
 );
